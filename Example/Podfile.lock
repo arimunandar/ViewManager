@@ -1,0 +1,16 @@
+PODS:
+  - ViewManager (1.0.0)
+
+DEPENDENCIES:
+  - ViewManager (from `../`)
+
+EXTERNAL SOURCES:
+  ViewManager:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ViewManager: ff7055306872ed5509f3d13152c0d268acd0cc62
+
+PODFILE CHECKSUM: 3881b39f9cdc0570428911d51adf435fab9945ac
+
+COCOAPODS: 1.14.3

@@ -1,42 +1,15 @@
-#
-# Be sure to run `pod lib lint ViewManager.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see https://guides.cocoapods.org/syntax/podspec.html
-#
-
-Pod::Spec.new do |s|
-  s.name             = 'ViewManager'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of ViewManager.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
-
-  s.homepage         = 'https://github.com/12929878/ViewManager'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { '12929878' => 'ari@stockbit.com' }
-  s.source           = { :git => 'https://github.com/12929878/ViewManager.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '10.0'
-
-  s.source_files = 'ViewManager/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'ViewManager' => ['ViewManager/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+Pod::Spec.new do |spec|
+  spec.name          = 'ViewManager'
+  spec.version       = '1.0.0'
+  spec.license       = { :type => 'MIT' }
+  spec.homepage      = 'https://github.com/arimunandar/ViewManager'
+  spec.authors       = { 'Ari Munandar' => 'arimunandar.dev@gmail.com' }
+  spec.summary       = 'Generic UI Component for UICollectionView and UITableView'
+  spec.source        = { :git => 'https://github.com/arimunandar/ViewManager.git', :tag => 'v1.0.0' }
+  spec.module_name   = 'ViewManager'
+  spec.swift_version = '5'
+  spec.ios.deployment_target  = '12.4'
+  spec.source_files       = 'ViewManager/**/*'
+  spec.ios.source_files   = 'ViewManager/**/*'
+  spec.ios.framework  = 'UIKit'
 end

@@ -1,17 +1,17 @@
 import Foundation
 import UIKit
 
-public protocol ISBViewComponent {
+public protocol IViewComponent {
     associatedtype ViewType: UIView
     var id: String { get }
     var reuseIdentifier: String { get }
     func configure(view: ViewType)
-    func sizeItem(at size: CGSize, property: SBSectionProperty) -> CGSize
+    func sizeItem(at size: CGSize, property: SectionProperty) -> CGSize
     func height() -> CGFloat
-    func isEqual(to other: any ISBViewComponent) -> Bool
+    func isEqual(to other: any IViewComponent) -> Bool
 }
 
-public extension ISBViewComponent {
+public extension IViewComponent {
     var id: String {
         UUID().uuidString
     }
@@ -21,8 +21,8 @@ public extension ISBViewComponent {
     }
 }
 
-public extension ISBViewComponent where Self: Equatable {
-    func isEqual(to other: any ISBViewComponent) -> Bool {
+public extension IViewComponent where Self: Equatable {
+    func isEqual(to other: any IViewComponent) -> Bool {
         guard let otherComponent = other as? Self else {
             return false
         }
@@ -30,44 +30,44 @@ public extension ISBViewComponent where Self: Equatable {
     }
 }
 
-public extension ISBViewComponent where ViewType: UITableViewCell {
-    func sizeItem(at size: CGSize, property: SBSectionProperty) -> CGSize {
+public extension IViewComponent where ViewType: UITableViewCell {
+    func sizeItem(at size: CGSize, property: SectionProperty) -> CGSize {
         return .zero
     }
 }
 
-public extension ISBViewComponent where ViewType: UITableViewHeaderFooterView {
-    func sizeItem(at size: CGSize, property: SBSectionProperty) -> CGSize {
+public extension IViewComponent where ViewType: UITableViewHeaderFooterView {
+    func sizeItem(at size: CGSize, property: SectionProperty) -> CGSize {
         return .zero
     }
 }
 
-public extension ISBViewComponent where ViewType: UICollectionViewCell {
+public extension IViewComponent where ViewType: UICollectionViewCell {
     func height() -> CGFloat {
         return 0.0
     }
 }
 
-public extension ISBViewComponent where ViewType: UICollectionReusableView {
+public extension IViewComponent where ViewType: UICollectionReusableView {
     func height() -> CGFloat {
         return 0.0
     }
 }
 
-public struct SBAnyViewComponent: ISBViewComponent, Equatable {
+public struct AnyViewComponent: IViewComponent, Equatable {
     public let id: String
     public let componentType: ViewType.Type
     public let reuseIdentifier: String
 
     private let configureViewClosure: (ViewType) -> Void
-    private let sizeItemClosure: (CGSize, SBSectionProperty) -> CGSize
+    private let sizeItemClosure: (CGSize, SectionProperty) -> CGSize
     private let heightClosure: () -> CGFloat
 
-    public init<C: ISBViewComponent>(_ component: C) where C.ViewType: ViewType {
+    public init<C: IViewComponent>(_ component: C) where C.ViewType: ViewType {
         self.init(id: component.id, component)
     }
 
-    public init<C: ISBViewComponent>(id: String, _ component: C) where C.ViewType: ViewType {
+    public init<C: IViewComponent>(id: String, _ component: C) where C.ViewType: ViewType {
         self.id = id
         reuseIdentifier = component.reuseIdentifier
         componentType = C.ViewType.self
@@ -92,7 +92,7 @@ public struct SBAnyViewComponent: ISBViewComponent, Equatable {
         configureViewClosure(view)
     }
 
-    public func sizeItem(at size: CGSize, property: SBSectionProperty) -> CGSize {
+    public func sizeItem(at size: CGSize, property: SectionProperty) -> CGSize {
         sizeItemClosure(size, property)
     }
 
@@ -100,19 +100,19 @@ public struct SBAnyViewComponent: ISBViewComponent, Equatable {
         heightClosure()
     }
 
-    public static func == (lhs: SBAnyViewComponent, rhs: SBAnyViewComponent) -> Bool {
+    public static func == (lhs: AnyViewComponent, rhs: AnyViewComponent) -> Bool {
         lhs.id == rhs.id && lhs.reuseIdentifier == rhs.reuseIdentifier && lhs.componentType == rhs.componentType
     }
 }
 
-public struct SBSectionComponent {
+public struct SectionComponent {
     public var id: String = UUID().uuidString
-    public var components: [any ISBViewComponent]
-    public var header: (any ISBViewComponent)?
-    public var footer: (any ISBViewComponent)?
-    public var property: SBSectionProperty = .init()
+    public var components: [any IViewComponent]
+    public var header: (any IViewComponent)?
+    public var footer: (any IViewComponent)?
+    public var property: SectionProperty = .init()
 
-    public init(id: String = UUID().uuidString, components: [any ISBViewComponent], header: (any ISBViewComponent)? = nil, footer: (any ISBViewComponent)? = nil, property: SBSectionProperty = .init()) {
+    public init(id: String = UUID().uuidString, components: [any IViewComponent], header: (any IViewComponent)? = nil, footer: (any IViewComponent)? = nil, property: SectionProperty = .init()) {
         self.id = id
         self.components = components
         self.header = header
@@ -120,7 +120,7 @@ public struct SBSectionComponent {
         self.property = property
     }
 
-    static func == (lhs: SBSectionComponent, rhs: SBSectionComponent) -> Bool {
+    static func == (lhs: SectionComponent, rhs: SectionComponent) -> Bool {
         guard lhs.id == rhs.id, lhs.components.count == rhs.components.count else {
             return false
         }
@@ -151,7 +151,7 @@ public struct SBSectionComponent {
     }
 }
 
-public struct SBSectionProperty {
+public struct SectionProperty {
     public var minimumLineSpacing: CGFloat = 0
     public var minimumInteritemSpacing: CGFloat = 0
     public var sectionInset: UIEdgeInsets = .zero
@@ -167,7 +167,7 @@ public struct SBSectionProperty {
     }
 }
 
-public enum SBSectionSupplementaryKind {
+public enum SectionSupplementaryKind {
     case header
     case footer
 

@@ -1,5 +1,5 @@
 //
-//  SBTableViewManager.swift
+//  TableViewManager.swift
 //  TutorialDemo
 //
 //  Created by Ari Munandar on 23/12/23.
@@ -8,18 +8,18 @@
 import Foundation
 import UIKit
 
-public typealias SBTableViewDelegateHandler = (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void
+public typealias TableViewDelegateHandler = (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void
 
-public final class SBTableViewManager: NSObject, UITableViewDataSource, UITableViewDelegate, SBViewManager {
+public final class TableViewManager: NSObject, UITableViewDataSource, UITableViewDelegate, ViewManager {
     public typealias ViewType = UITableView
     public weak var view: ViewType?
 
-    public var sections: [SBSectionComponent] = []
+    public var sections: [SectionComponent] = []
     public var registeredViewTypes = Set<String>()
-    private var didSelectItemHandler: SBTableViewDelegateHandler?
-    private var didDeselectItemHandler: SBTableViewDelegateHandler?
-    private var didWillDisplayItemHandler: SBTableViewDelegateHandler?
-    private var didGetBottomHandler: SBTableViewDelegateHandler?
+    private var didSelectItemHandler: TableViewDelegateHandler?
+    private var didDeselectItemHandler: TableViewDelegateHandler?
+    private var didWillDisplayItemHandler: TableViewDelegateHandler?
+    private var didGetBottomHandler: TableViewDelegateHandler?
 
     public init(tableView: UITableView?) {
         self.view = tableView
@@ -33,7 +33,7 @@ public final class SBTableViewManager: NSObject, UITableViewDataSource, UITableV
     }
 }
 
-extension SBTableViewManager {
+extension TableViewManager {
     public func configureView() {
         if #available(iOS 15.0, *) {
             view?.sectionHeaderTopPadding = 0
@@ -59,7 +59,7 @@ extension SBTableViewManager {
     }
 }
 
-public extension SBTableViewManager {
+public extension TableViewManager {
     func numberOfSections(in tableView: UITableView) -> Int {
         sections.count
     }
@@ -128,20 +128,20 @@ public extension SBTableViewManager {
     }
 }
 
-public extension SBTableViewManager {
-    func didSelectItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+public extension TableViewManager {
+    func didSelectItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didSelectItemHandler = completion
     }
 
-    func didDeselectItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didDeselectItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didDeselectItemHandler = completion
     }
 
-    func didWillDisplayItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didWillDisplayItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didWillDisplayItemHandler = completion
     }
 
-    func didGetBottom(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didGetBottom(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didGetBottomHandler = completion
     }
 }

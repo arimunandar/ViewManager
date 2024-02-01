@@ -1,5 +1,5 @@
 //
-//  SBViewManager.swift
+//  ViewManager.swift
 //  TutorialDemo
 //
 //  Created by Ari Munandar on 31/01/24.
@@ -8,45 +8,45 @@
 import Foundation
 import UIKit
 
-public enum SBIdentifier {
+public enum Identifier {
     case byID(String)
     case byIndex(Int)
 }
 
-public protocol SBViewManager: AnyObject {
+public protocol ViewManager: AnyObject {
     associatedtype ViewType
 
     var view: ViewType? { get set }
-    var sections: [SBSectionComponent] { get set }
+    var sections: [SectionComponent] { get set }
     var registeredViewTypes: Set<String> { get set }
     func configureView()
     func registerComponentsIfNeeded()
     func registerCellsIfNeeded()
-    func configureComponent(_ component: any ISBViewComponent) -> SBAnyViewComponent
+    func configureComponent(_ component: any IViewComponent) -> AnyViewComponent
     func performUpdate(_ completion: (() -> Void)?)
-    func updateComponent(inSection: SBIdentifier, atItem: SBIdentifier, newComponent: any ISBViewComponent)
-    func updateComponent(in sectionIndex: Int, at itemIndex: Int, with newComponent: any ISBViewComponent)
-    func updateSupplementaryComponent(inSection: SBIdentifier, kind: SBSectionSupplementaryKind, newComponent: any ISBViewComponent)
-    func getSections() -> [SBSectionComponent]
-    func getSection(inSection: SBIdentifier) -> SBSectionComponent?
-    func getComponent(inSection: SBIdentifier, atItem: SBIdentifier) -> (any ISBViewComponent)?
-    func initialSection(section: SBSectionComponent)
-    func initialSections(sections: [SBSectionComponent])
-    func addComponent(inSection: SBIdentifier, newComponent: any ISBViewComponent)
-    func addComponents(inSection: SBIdentifier, newComponents: [any ISBViewComponent])
-    func insertComponent(inSection: SBIdentifier, atItem: SBIdentifier, newComponent: any ISBViewComponent)
-    func insertComponents(inSection: SBIdentifier, atItems: [SBIdentifier], newComponents: [any ISBViewComponent])
-    func moveItem(fromSection currentSection: SBIdentifier, fromItem currentItem: SBIdentifier, toSection targetSection: SBIdentifier, toItem targetItem: SBIdentifier)
-    func removeComponent(inSection: SBIdentifier, atItem: SBIdentifier)
-    func removeComponents(inSection: SBIdentifier, atItems: [SBIdentifier])
-    func removeSupplementaryComponent(inSection: SBIdentifier, kind: SBSectionSupplementaryKind)
-    func didSelectItem(_ completion: @escaping (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void)
-    func didDeselectItem(_ completion: @escaping (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void)
-    func didWillDisplayItem(_ completion: @escaping (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void)
-    func didGetBottom(_ completion: @escaping (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void)
+    func updateComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent)
+    func updateComponent(in sectionIndex: Int, at itemIndex: Int, with newComponent: any IViewComponent)
+    func updateSupplementaryComponent(inSection: Identifier, kind: SectionSupplementaryKind, newComponent: any IViewComponent)
+    func getSections() -> [SectionComponent]
+    func getSection(inSection: Identifier) -> SectionComponent?
+    func getComponent(inSection: Identifier, atItem: Identifier) -> (any IViewComponent)?
+    func initialSection(section: SectionComponent)
+    func initialSections(sections: [SectionComponent])
+    func addComponent(inSection: Identifier, newComponent: any IViewComponent)
+    func addComponents(inSection: Identifier, newComponents: [any IViewComponent])
+    func insertComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent)
+    func insertComponents(inSection: Identifier, atItems: [Identifier], newComponents: [any IViewComponent])
+    func moveItem(fromSection currentSection: Identifier, fromItem currentItem: Identifier, toSection targetSection: Identifier, toItem targetItem: Identifier)
+    func removeComponent(inSection: Identifier, atItem: Identifier)
+    func removeComponents(inSection: Identifier, atItems: [Identifier])
+    func removeSupplementaryComponent(inSection: Identifier, kind: SectionSupplementaryKind)
+    func didSelectItem(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
+    func didDeselectItem(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
+    func didWillDisplayItem(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
+    func didGetBottom(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
 }
 
-public extension SBViewManager {
+public extension ViewManager {
     func registerComponentsIfNeeded() {
         registerCellsIfNeeded()
         registerSupplementaryViewsIfNeeded()
@@ -60,7 +60,7 @@ public extension SBViewManager {
         }
     }
 
-    private func registerComponent(_ component: any ISBViewComponent) {
+    private func registerComponent(_ component: any IViewComponent) {
         let newComponent = configureComponent(component)
         let identifier = newComponent.reuseIdentifier
 
@@ -77,35 +77,35 @@ public extension SBViewManager {
         registeredViewTypes.insert(identifier)
     }
 
-    private func registerNibForComponent(_ component: SBAnyViewComponent) {
+    private func registerNibForComponent(_ component: AnyViewComponent) {
         registerNibForCollectionView(component)
         registerNibForTableView(component)
     }
 
-    private func registerNibForCollectionView(_ component: SBAnyViewComponent) {
+    private func registerNibForCollectionView(_ component: AnyViewComponent) {
         if let view = view as? UICollectionView, let cellType = component.componentType as? UICollectionViewCell.Type {
             view.registerCellNib(cellType)
         }
     }
 
-    private func registerNibForTableView(_ component: SBAnyViewComponent) {
+    private func registerNibForTableView(_ component: AnyViewComponent) {
         if let view = view as? UITableView, let cellType = component.componentType as? UITableViewCell.Type {
             view.registerCellNib(cellType)
         }
     }
 
-    private func registerClassForComponent(_ component: SBAnyViewComponent) {
+    private func registerClassForComponent(_ component: AnyViewComponent) {
         registerClassForCollectionView(component)
         registerClassForTableView(component)
     }
 
-    private func registerClassForCollectionView(_ component: SBAnyViewComponent) {
+    private func registerClassForCollectionView(_ component: AnyViewComponent) {
         if let view = view as? UICollectionView, let cellType = component.componentType as? UICollectionViewCell.Type {
             view.registerCellClass(cellType)
         }
     }
 
-    private func registerClassForTableView(_ component: SBAnyViewComponent) {
+    private func registerClassForTableView(_ component: AnyViewComponent) {
         if let view = view as? UITableView, let cellType = component.componentType as? UITableViewCell.Type {
             view.registerCellClass(cellType)
         }
@@ -118,7 +118,7 @@ public extension SBViewManager {
         }
     }
 
-    private func registerSupplementaryComponent(kind: String, component: (any ISBViewComponent)?) {
+    private func registerSupplementaryComponent(kind: String, component: (any IViewComponent)?) {
         guard let component = component else {
             return
         }
@@ -139,7 +139,7 @@ public extension SBViewManager {
         registeredViewTypes.insert(identifier)
     }
 
-    private func registerNibForSupplementaryComponent(_ component: SBAnyViewComponent, kind: String) {
+    private func registerNibForSupplementaryComponent(_ component: AnyViewComponent, kind: String) {
         if let view = view as? UICollectionView, let viewType = component.componentType as? UICollectionReusableView.Type {
             view.registerSupplementaryNib(viewType, forSupplementaryViewOfKind: kind)
         }
@@ -149,7 +149,7 @@ public extension SBViewManager {
         }
     }
 
-    private func registerClassForSupplementaryComponent(_ component: SBAnyViewComponent, kind: String) {
+    private func registerClassForSupplementaryComponent(_ component: AnyViewComponent, kind: String) {
         if let view = view as? UICollectionView, let viewType = component.componentType as? UICollectionReusableView.Type {
             view.registerSupplementaryClass(viewType, forSupplementaryViewOfKind: kind)
         }
@@ -159,20 +159,20 @@ public extension SBViewManager {
         }
     }
 
-    func configureComponent(_ component: any ISBViewComponent) -> SBAnyViewComponent {
-        guard let component = component as? SBAnyViewComponent else {
-            return SBAnyViewComponent(component)
+    func configureComponent(_ component: any IViewComponent) -> AnyViewComponent {
+        guard let component = component as? AnyViewComponent else {
+            return AnyViewComponent(component)
         }
         return component
     }
 }
 
-public extension SBViewManager {
-    func getSections() -> [SBSectionComponent] {
+public extension ViewManager {
+    func getSections() -> [SectionComponent] {
         return sections
     }
 
-    func getSection(inSection: SBIdentifier) -> SBSectionComponent? {
+    func getSection(inSection: Identifier) -> SectionComponent? {
         switch inSection {
         case .byID(let sectionId):
             return sections.first(where: { $0.id == sectionId })
@@ -185,7 +185,7 @@ public extension SBViewManager {
         }
     }
 
-    func getComponent(inSection: SBIdentifier, atItem: SBIdentifier) -> (any ISBViewComponent)? {
+    func getComponent(inSection: Identifier, atItem: Identifier) -> (any IViewComponent)? {
         guard let components = getSection(inSection: inSection)?.components else {
             return nil
         }
@@ -199,12 +199,12 @@ public extension SBViewManager {
     }
 }
 
-public extension SBViewManager {
-    func initialSection(section: SBSectionComponent) {
+public extension ViewManager {
+    func initialSection(section: SectionComponent) {
         initialSections(sections: [section])
     }
 
-    func initialSections(sections: [SBSectionComponent]) {
+    func initialSections(sections: [SectionComponent]) {
         self.sections = sections
         registerComponentsIfNeeded()
         if let view = view as? UITableView {
@@ -217,7 +217,7 @@ public extension SBViewManager {
     }
 }
 
-public extension SBViewManager {
+public extension ViewManager {
     func performUpdate(_ completion: (() -> Void)?) {
         UIView.performWithoutAnimation {
             if let view = view as? UICollectionView {
@@ -236,11 +236,11 @@ public extension SBViewManager {
         }
     }
 
-    func addComponent(inSection: SBIdentifier, newComponent: any ISBViewComponent) {
+    func addComponent(inSection: Identifier, newComponent: any IViewComponent) {
         addComponents(inSection: inSection, newComponents: [newComponent])
     }
 
-    func addComponents(inSection: SBIdentifier, newComponents: [any ISBViewComponent]) {
+    func addComponents(inSection: Identifier, newComponents: [any IViewComponent]) {
         var sectionIndex: Int?
 
         switch inSection {
@@ -270,7 +270,7 @@ public extension SBViewManager {
         }
     }
 
-    func updateComponent(inSection: SBIdentifier, atItem: SBIdentifier, newComponent: any ISBViewComponent) {
+    func updateComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent) {
         var sectionIndex: Int?
         var itemIndex: Int?
 
@@ -295,7 +295,7 @@ public extension SBViewManager {
         }
     }
 
-    func updateComponent(in sectionIndex: Int, at itemIndex: Int, with newComponent: any ISBViewComponent) {
+    func updateComponent(in sectionIndex: Int, at itemIndex: Int, with newComponent: any IViewComponent) {
         guard itemIndex < sections[sectionIndex].components.count else {
             print("Invalid item index")
             return
@@ -318,7 +318,7 @@ public extension SBViewManager {
         }
     }
 
-    func updateSupplementaryComponent(inSection: SBIdentifier, kind: SBSectionSupplementaryKind, newComponent: any ISBViewComponent) {
+    func updateSupplementaryComponent(inSection: Identifier, kind: SectionSupplementaryKind, newComponent: any IViewComponent) {
         var sectionIndex: Int?
 
         switch inSection {
@@ -344,11 +344,11 @@ public extension SBViewManager {
         }
     }
 
-    func insertComponent(inSection: SBIdentifier, atItem: SBIdentifier, newComponent: any ISBViewComponent) {
+    func insertComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent) {
         insertComponents(inSection: inSection, atItems: [atItem], newComponents: [newComponent])
     }
 
-    func insertComponents(inSection: SBIdentifier, atItems: [SBIdentifier], newComponents: [any ISBViewComponent]) {
+    func insertComponents(inSection: Identifier, atItems: [Identifier], newComponents: [any IViewComponent]) {
         var sectionIndex: Int?
 
         switch inSection {
@@ -395,7 +395,7 @@ public extension SBViewManager {
         }
     }
 
-    func moveItem(fromSection currentSection: SBIdentifier, fromItem currentItem: SBIdentifier, toSection targetSection: SBIdentifier, toItem targetItem: SBIdentifier) {
+    func moveItem(fromSection currentSection: Identifier, fromItem currentItem: Identifier, toSection targetSection: Identifier, toItem targetItem: Identifier) {
         var currentSectionIndex: Int?
         var currentItemIndex: Int?
         var targetSectionIndex: Int?
@@ -454,11 +454,11 @@ public extension SBViewManager {
         }
     }
 
-    func removeComponent(inSection: SBIdentifier, atItem: SBIdentifier) {
+    func removeComponent(inSection: Identifier, atItem: Identifier) {
         removeComponents(inSection: inSection, atItems: [atItem])
     }
 
-    func removeComponents(inSection: SBIdentifier, atItems: [SBIdentifier]) {
+    func removeComponents(inSection: Identifier, atItems: [Identifier]) {
         var sectionIndex: Int?
 
         switch inSection {
@@ -500,7 +500,7 @@ public extension SBViewManager {
         }
     }
 
-    func removeSupplementaryComponent(inSection: SBIdentifier, kind: SBSectionSupplementaryKind) {
+    func removeSupplementaryComponent(inSection: Identifier, kind: SectionSupplementaryKind) {
         var sectionIndex: Int?
 
         switch inSection {

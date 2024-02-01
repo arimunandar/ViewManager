@@ -1,5 +1,5 @@
 //
-//  SBCollectionViewManager.swift
+//  CollectionViewManager.swift
 //  TutorialDemo
 //
 //  Created by Ari Munandar on 23/12/23.
@@ -8,18 +8,18 @@
 import Foundation
 import UIKit
 
-public typealias SBCollectionViewDelegateHandler = (_ item: SBAnyViewComponent, _ indexPath: IndexPath) -> Void
+public typealias CollectionViewDelegateHandler = (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void
 
-public final class SBCollectionViewManager: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SBViewManager {
+public final class CollectionViewManager: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ViewManager {
     public typealias ViewType = UICollectionView
     public weak var view: ViewType?
 
-    public var sections: [SBSectionComponent] = []
+    public var sections: [SectionComponent] = []
     public var registeredViewTypes = Set<String>()
-    private var didSelectItemHandler: SBCollectionViewDelegateHandler?
-    private var didDeselectItemHandler: SBCollectionViewDelegateHandler?
-    private var didWillDisplayItemHandler: SBCollectionViewDelegateHandler?
-    private var didGetBottomHandler: SBCollectionViewDelegateHandler?
+    private var didSelectItemHandler: CollectionViewDelegateHandler?
+    private var didDeselectItemHandler: CollectionViewDelegateHandler?
+    private var didWillDisplayItemHandler: CollectionViewDelegateHandler?
+    private var didGetBottomHandler: CollectionViewDelegateHandler?
 
     public init(collectionView: UICollectionView?) {
         self.view = collectionView
@@ -33,7 +33,7 @@ public final class SBCollectionViewManager: NSObject, UICollectionViewDataSource
     }
 }
 
-public extension SBCollectionViewManager {
+public extension CollectionViewManager {
     func configureView() {
         view?.dataSource = self
         view?.delegate = self
@@ -54,7 +54,7 @@ public extension SBCollectionViewManager {
     }
 }
 
-public extension SBCollectionViewManager {
+public extension CollectionViewManager {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return sections.count
     }
@@ -73,7 +73,7 @@ public extension SBCollectionViewManager {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let section = sections[indexPath.section]
         let reuseIdentifier: String
-        let component: (any ISBViewComponent)?
+        let component: (any IViewComponent)?
 
         switch kind {
         case UICollectionView.elementKindSectionHeader:
@@ -92,7 +92,7 @@ public extension SBCollectionViewManager {
     }
 }
 
-public extension SBCollectionViewManager {
+public extension CollectionViewManager {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let component = sections[indexPath.section].components[indexPath.item]
         let sectionProperty = sections[indexPath.section].property
@@ -128,7 +128,7 @@ public extension SBCollectionViewManager {
     }
 }
 
-public extension SBCollectionViewManager {
+public extension CollectionViewManager {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         handleItemSelection(at: indexPath, with: didSelectItemHandler)
     }
@@ -150,26 +150,26 @@ public extension SBCollectionViewManager {
         didGetBottomHandler?(configureComponent(component), indexPath)
     }
 
-    private func handleItemSelection(at indexPath: IndexPath, with handler: SBCollectionViewDelegateHandler?) {
+    private func handleItemSelection(at indexPath: IndexPath, with handler: CollectionViewDelegateHandler?) {
         let component = sections[indexPath.section].components[indexPath.item]
         handler?(configureComponent(component), indexPath)
     }
 }
 
-public extension SBCollectionViewManager {
-    func didSelectItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+public extension CollectionViewManager {
+    func didSelectItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didSelectItemHandler = completion
     }
 
-    func didDeselectItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didDeselectItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didDeselectItemHandler = completion
     }
 
-    func didWillDisplayItem(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didWillDisplayItem(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didWillDisplayItemHandler = completion
     }
 
-    func didGetBottom(_ completion: @escaping (SBAnyViewComponent, IndexPath) -> Void) {
+    func didGetBottom(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didGetBottomHandler = completion
     }
 }

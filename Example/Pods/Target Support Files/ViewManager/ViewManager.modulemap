@@ -1,6 +1,0 @@
-framework module ViewManager {
-  umbrella header "ViewManager-umbrella.h"
-
-  export *
-  module * { export * }
-}

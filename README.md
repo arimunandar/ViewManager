@@ -22,7 +22,7 @@ pod 'ViewManager'
 
 ## Author
 
-12929878, ari@stockbit.com
+Ari Munandar, arimunandar.dev@gmail.com
 
 ## License
 

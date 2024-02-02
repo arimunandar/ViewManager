@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author       = { "Ari Munandar" => "arimunandar.dev@gmail.com" }
 
-  spec.ios.deployment_target = "12.4"
+  spec.ios.deployment_target = "11.0"
   spec.swift_version = "5.0"
 
   spec.source        = { :git => "https://github.com/arimunandar/ViewManager.git", :tag => "#{spec.version}" }

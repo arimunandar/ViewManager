@@ -1,6 +1,6 @@
 //
 //  TableViewManager.swift
-//  TutorialDemo
+//  ViewManager
 //
 //  Created by Ari Munandar on 23/12/23.
 //

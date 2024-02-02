@@ -1,6 +1,6 @@
 //
 //  ViewManager.swift
-//  TutorialDemo
+//  ViewManager
 //
 //  Created by Ari Munandar on 31/01/24.
 //

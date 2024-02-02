@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "ViewManager"
-  spec.version      = "1.0.9"
+  spec.version      = "1.0.10"
   spec.summary      = "A CocoaPods library written in Swift"
 
   spec.description  = "This CocoaPods library helps you perform navigation."

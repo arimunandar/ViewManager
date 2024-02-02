@@ -25,15 +25,14 @@ public protocol ViewManager: AnyObject {
     func configureComponent(_ component: any IViewComponent) -> AnyViewComponent
     func performUpdate(_ completion: (() -> Void)?)
     func updateComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent)
-    func updateComponent(in sectionIndex: Int, at itemIndex: Int, with newComponent: any IViewComponent)
     func updateSupplementaryComponent(inSection: Identifier, kind: SectionSupplementaryKind, newComponent: any IViewComponent)
     func getSections() -> [SectionComponent]
     func getSection(inSection: Identifier) -> SectionComponent?
     func getComponent(inSection: Identifier, atItem: Identifier) -> (any IViewComponent)?
     func setBackgroundView(_ component: any IViewComponent)
     func removeBackgroundView()
-    func initialSection(section: SectionComponent)
-    func initialSections(sections: [SectionComponent])
+    func setSection(_ section: SectionComponent)
+    func setSections(_ sections: [SectionComponent])
     func addComponent(inSection: Identifier, newComponent: any IViewComponent)
     func addComponents(inSection: Identifier, newComponents: [any IViewComponent])
     func insertComponent(inSection: Identifier, atItem: Identifier, newComponent: any IViewComponent)
@@ -229,11 +228,11 @@ public extension ViewManager {
         }
     }
 
-    func initialSection(section: SectionComponent) {
-        initialSections(sections: [section])
+    func setSection(_ section: SectionComponent) {
+        setSections([section])
     }
 
-    func initialSections(sections: [SectionComponent]) {
+    func setSections(_ sections: [SectionComponent]) {
         self.sections = sections
         registerComponentsIfNeeded()
         if let view = view as? UITableView {

@@ -30,6 +30,8 @@ public protocol ViewManager: AnyObject {
     func getSections() -> [SectionComponent]
     func getSection(inSection: Identifier) -> SectionComponent?
     func getComponent(inSection: Identifier, atItem: Identifier) -> (any IViewComponent)?
+    func setBackgroundView(_ component: any IViewComponent)
+    func removeBackgroundView()
     func initialSection(section: SectionComponent)
     func initialSections(sections: [SectionComponent])
     func addComponent(inSection: Identifier, newComponent: any IViewComponent)
@@ -200,6 +202,33 @@ public extension ViewManager {
 }
 
 public extension ViewManager {
+    private func loadViewFromNib(_ component: any IViewComponent) -> UIView? {
+        let comp = configureComponent(view).componentType
+        let identifier = String(describing: comp)
+        let nib = UINib(nibName: identifier, bundle: Bundle(for: comp))
+        return nib.instantiate(withOwner: self).first as? UIView
+    }
+
+    func setBackgroundView(_ component: any IViewComponent) {
+        if let collectionView = self.view as? UICollectionView {
+            collectionView.backgroundView = loadViewFromNib(view)
+        }
+
+        if let tableView = self.view as? UITableView {
+            tableView.backgroundView = loadViewFromNib(view)
+        }
+    }
+
+    func removeBackgroundView() {
+        if let collectionView = view as? UICollectionView {
+            collectionView.backgroundView = nil
+        }
+
+        if let tableView = view as? UITableView {
+            tableView.backgroundView = nil
+        }
+    }
+
     func initialSection(section: SectionComponent) {
         initialSections(sections: [section])
     }

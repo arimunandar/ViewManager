@@ -61,6 +61,16 @@ public extension IViewComponent where ViewType: UICollectionReusableView {
     }
 }
 
+public extension IViewComponent where ViewType: UIView {
+    func height() -> CGFloat {
+        return 0.0
+    }
+
+    func sizeItem(at size: CGSize, property: SectionProperty) -> CGSize {
+        return .zero
+    }
+}
+
 public struct AnyViewComponent: IViewComponent, Equatable {
     public let id: String
     public let componentType: ViewType.Type

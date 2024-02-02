@@ -13,6 +13,7 @@ public typealias CollectionViewDelegateHandler = (_ item: AnyViewComponent, _ in
 public final class CollectionViewManager: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ViewManager {
     public typealias ViewType = UICollectionView
     public weak var view: ViewType?
+    public var shouldAnimateOnReload: Bool = true
 
     public var sections: [SectionComponent] = []
     public var registeredViewTypes = Set<String>()

@@ -19,6 +19,7 @@ public protocol ViewManager: AnyObject {
     var view: ViewType? { get set }
     var sections: [SectionComponent] { get set }
     var registeredViewTypes: Set<String> { get set }
+    var shouldAnimateOnReload: Bool { get set }
     func configureView()
     func registerComponentsIfNeeded()
     func registerCellsIfNeeded()
@@ -209,11 +210,11 @@ public extension ViewManager {
     }
 
     func setBackgroundView(_ component: any IViewComponent) {
-        if let collectionView = self.view as? UICollectionView {
+        if let collectionView = view as? UICollectionView {
             collectionView.backgroundView = loadViewFromNib(component)
         }
 
-        if let tableView = self.view as? UITableView {
+        if let tableView = view as? UITableView {
             tableView.backgroundView = loadViewFromNib(component)
         }
     }
@@ -247,7 +248,7 @@ public extension ViewManager {
 
 public extension ViewManager {
     func performUpdate(_ completion: (() -> Void)?) {
-        UIView.performWithoutAnimation {
+        if shouldAnimateOnReload {
             if let view = view as? UICollectionView {
                 view.performBatchUpdates({
                     completion?()
@@ -255,7 +256,19 @@ public extension ViewManager {
             }
 
             if let view = view as? UITableView {
-                UIView.performWithoutAnimation {
+                view.beginUpdates()
+                completion?()
+                view.endUpdates()
+            }
+        } else {
+            UIView.performWithoutAnimation {
+                if let view = view as? UICollectionView {
+                    view.performBatchUpdates({
+                        completion?()
+                    }, completion: nil)
+                }
+
+                if let view = view as? UITableView {
                     view.beginUpdates()
                     completion?()
                     view.endUpdates()

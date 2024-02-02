@@ -13,9 +13,10 @@ public typealias TableViewDelegateHandler = (_ item: AnyViewComponent, _ indexPa
 public final class TableViewManager: NSObject, UITableViewDataSource, UITableViewDelegate, ViewManager {
     public typealias ViewType = UITableView
     public weak var view: ViewType?
-
+    public var shouldAnimateOnReload: Bool = true
     public var sections: [SectionComponent] = []
     public var registeredViewTypes = Set<String>()
+    
     private var didSelectItemHandler: TableViewDelegateHandler?
     private var didDeselectItemHandler: TableViewDelegateHandler?
     private var didWillDisplayItemHandler: TableViewDelegateHandler?

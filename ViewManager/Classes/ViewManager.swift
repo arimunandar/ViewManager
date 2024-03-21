@@ -69,8 +69,10 @@ public extension ViewManager {
         guard !registeredViewTypes.contains(identifier) else {
             return
         }
-
-        if Bundle.main.path(forResource: identifier, ofType: "nib") != nil {
+        
+        let type = type(of: self)
+        let bundle = Bundle(for: type)
+        if bundle.path(forResource: identifier, ofType: "nib") != nil {
             registerNibForComponent(newComponent)
         } else {
             registerClassForComponent(newComponent)

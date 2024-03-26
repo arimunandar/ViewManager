@@ -11,6 +11,7 @@ import UIKit
 public typealias CollectionViewDelegateHandler = (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void
 
 public final class CollectionViewManager: NSObject, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ViewManager {
+    
     public typealias ViewType = UICollectionView
     public weak var view: ViewType?
     public var shouldAnimateOnReload: Bool = true
@@ -21,6 +22,7 @@ public final class CollectionViewManager: NSObject, UICollectionViewDataSource, 
     private var didDeselectItemHandler: CollectionViewDelegateHandler?
     private var didWillDisplayItemHandler: CollectionViewDelegateHandler?
     private var didGetBottomHandler: CollectionViewDelegateHandler?
+    private var didScrollViewHandler: ((_ scrollView: UIScrollView) -> Void)?
 
     public init(collectionView: UICollectionView?) {
         self.view = collectionView
@@ -172,5 +174,15 @@ public extension CollectionViewManager {
 
     func didGetBottom(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didGetBottomHandler = completion
+    }
+    
+    public func didScrollView(_ completion: @escaping (UIScrollView) -> Void) {
+        didScrollViewHandler = completion
+    }
+}
+
+extension CollectionViewManager: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollViewHandler?(scrollView)
     }
 }

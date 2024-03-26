@@ -46,6 +46,7 @@ public protocol ViewManager: AnyObject {
     func didDeselectItem(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
     func didWillDisplayItem(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
     func didGetBottom(_ completion: @escaping (_ item: AnyViewComponent, _ indexPath: IndexPath) -> Void)
+    func didScrollView(_ completion: @escaping (_ scrollView: UIScrollView) -> Void)
 }
 
 public extension ViewManager {

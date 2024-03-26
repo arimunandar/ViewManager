@@ -21,6 +21,7 @@ public final class TableViewManager: NSObject, UITableViewDataSource, UITableVie
     private var didDeselectItemHandler: TableViewDelegateHandler?
     private var didWillDisplayItemHandler: TableViewDelegateHandler?
     private var didGetBottomHandler: TableViewDelegateHandler?
+    private var didScrollViewHandler: ((_ scrollView: UIScrollView) -> Void)?
 
     public init(tableView: UITableView?) {
         self.view = tableView
@@ -144,5 +145,15 @@ public extension TableViewManager {
 
     func didGetBottom(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didGetBottomHandler = completion
+    }
+    
+    public func didScrollView(_ completion: @escaping (UIScrollView) -> Void) {
+        didScrollViewHandler = completion
+    }
+}
+
+extension CollectionViewManager: UIScrollViewDelegate {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollViewHandler?(scrollView)
     }
 }

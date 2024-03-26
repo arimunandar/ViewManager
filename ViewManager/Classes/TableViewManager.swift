@@ -145,4 +145,6 @@ public extension TableViewManager {
     func didGetBottom(_ completion: @escaping (AnyViewComponent, IndexPath) -> Void) {
         didGetBottomHandler = completion
     }
+    
+    func didScrollView(_ completion: @escaping (UIScrollView) -> Void) {}
 }
